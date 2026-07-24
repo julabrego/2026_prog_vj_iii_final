@@ -46,16 +46,20 @@ Los personajes presentan diseños grotescos, cargados de personalidad mediante a
 
 #### 1.7.1. Referencias de cámara y perspectiva
 * **Sonic Battle (Game Boy Advance, 2003)**
+
 ![Sonic Battle (Game Boy Advance, 2003)](./assets/sonic-battle.png)
 
 * **Hades (2020)**
+
 ![Hades (2020)](./assets/hades.png)
 
 #### 1.7.2. Referencias de estética de cómic, pulp magazines y tinta
 * **Teenage Mutant Ninja Turtles (Comic publicado por Mirage Studios entre 1984 y 2013)**
+
 ![Teenage Mutant Ninja Turtles (Comic publicado por Mirage Studios entre 1984 y 2013)](./assets/turtles.png)
 
 * **Planet Stories, portada de Allen Anderson (1952)**
+
 ![Planet Stories, portada de Allen Anderson (1952)](./assets/pulp.jpg)
 
 ### 1.8. Música
