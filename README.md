@@ -4,6 +4,8 @@ Un arena fighter con estética callejera, protagonizado por una lombriz de tierr
 
 **Distrito Sarlanga** es un juego de peleas en arena ágil y dinámico con perspectiva pseudo-isométrica 2.5D. Inspirado en Power Stone, Sonic Battle y Def Jam: Fight for NY.
 
+📄 [Documento de Concepto](documentos/CONCEPT.md)
+
 ## Autor
 
 Julián Ezequiel Ábrego
