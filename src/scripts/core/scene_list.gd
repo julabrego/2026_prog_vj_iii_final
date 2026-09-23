@@ -3,6 +3,7 @@ extends Resource
 
 ## Data-driven ordered list of scenes, used by [SceneManager].
 ## Scene ids are derived from each path's file basename (e.g. "scene1.tscn" -> "scene1").
+## Keep ids unique within a list; paths identify scenes across lists.
 
 @export var list_name: String = ""
 @export var scenes: Array[String] = []
@@ -35,6 +36,10 @@ func index_of_id(scene_id: String) -> int:
 		if id_from_path(scenes[i]) == scene_id:
 			return i
 	return -1
+
+
+func index_of_path(path: String) -> int:
+	return scenes.find(path)
 
 
 func has_id(scene_id: String) -> bool:

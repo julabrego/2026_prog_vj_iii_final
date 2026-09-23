@@ -2,4 +2,4 @@ extends Node
 
 
 func _ready() -> void:
-	SceneManager.go_to_list("MainFlow", 0)
+	SceneManager.call_deferred("go_to_list", "MainFlow", 0)
