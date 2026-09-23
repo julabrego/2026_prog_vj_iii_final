@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://dnx6c5xblikte"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_n5kmb"]
+
+[node name="Arena" type="Node3D" unique_id=1539584892]
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1510050771]
+transform = Transform3D(0.6129622, -0.39505613, 0.68425727, 0, 0.8660254, 0.5, -0.79011226, -0.3064811, 0.5308408, 3.1030097, 2.8, 2.8)
+
+[node name="DaCube" type="Node3D" parent="." unique_id=1582155401]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="DaCube" unique_id=992153878]
+mesh = SubResource("BoxMesh_n5kmb")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1340139292]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 2)

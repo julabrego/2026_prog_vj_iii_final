@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="SceneList" format=3 uid="uid://44o8ql68k31s"]
+
+[ext_resource type="Script" uid="uid://b860cq7fx06f0" path="res://scripts/core/scene_list.gd" id="1_3f2et"]
+
+[resource]
+script = ExtResource("1_3f2et")
+list_name = "MainFlow"
+scenes = Array[String](["res://scenes/ui/main_menu.tscn", "res://scenes/stages/arena.tscn"])
