@@ -5,4 +5,4 @@
 [resource]
 script = ExtResource("1_3f2et")
 list_name = "MainFlow"
-scenes = Array[String](["res://scenes/ui/main_menu.tscn", "res://scenes/stages/arena.tscn"])
+scenes = Array[String](["res://scenes/ui/main_menu.tscn", "res://scenes/stages/prototype_stage.tscn"])
