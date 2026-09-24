@@ -3,9 +3,19 @@
 [ext_resource type="PackedScene" uid="uid://dnx6c5xblikte" path="res://scenes/stages/shared/base_arena.tscn" id="1_14brs"]
 [ext_resource type="Script" uid="uid://bo4qk8yndxq2f" path="res://scripts/core/arena_camera.gd" id="2_7rbrk"]
 
-[sub_resource type="Environment" id="Environment_7rbrk"]
-background_mode = 1
-background_color = Color(1, 1, 1, 1)
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7rbrk"]
+sky_top_color = Color(0.38431373, 0.45490196, 0.54901963, 1)
+sky_horizon_color = Color(0.66242814, 0.67232513, 0.6868546, 1)
+
+[sub_resource type="Sky" id="Sky_itbh4"]
+sky_material = SubResource("ProceduralSkyMaterial_7rbrk")
+
+[sub_resource type="Environment" id="Environment_l2up3"]
+background_mode = 2
+sky = SubResource("Sky_itbh4")
+ambient_light_sky_contribution = 0.49
+tonemap_mode = 2
+glow_enabled = true
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_14brs"]
 height = 1.5
@@ -15,16 +25,24 @@ height = 1.5
 
 [node name="PrototypeStage" type="Node3D" unique_id=1840787619]
 
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1214565850]
+environment = SubResource("Environment_l2up3")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=379179682]
+transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 33.914574, 0)
+light_color = Color(1, 1, 0.9490196, 1)
+shadow_enabled = true
+
 [node name="Arena" parent="." unique_id=1539584892 instance=ExtResource("1_14brs")]
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=135850333]
 transform = Transform3D(0.7071068, -0.35355338, 0.61237246, 0, 0.8660254, 0.50000006, -0.7071068, -0.35355338, 0.61237246, 18.371174, 17.504356, 18.371174)
-environment = SubResource("Environment_7rbrk")
-projection = 1
 fov = 35.0
-size = 20.0
+size = 12.275
 script = ExtResource("2_7rbrk")
 target_path = NodePath("../CharacterBody3D")
+smoothness = 6.755
+perspective = true
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=1708755441]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.504355, 0)
