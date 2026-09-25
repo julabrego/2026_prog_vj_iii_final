@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://dnx6c5xblikte" path="res://scenes/stages/shared/base_arena.tscn" id="1_14brs"]
 [ext_resource type="Script" uid="uid://bo4qk8yndxq2f" path="res://scripts/core/arena_camera.gd" id="2_7rbrk"]
+[ext_resource type="Script" uid="uid://bnkn31kbexx1e" path="res://scripts/characters/fighter.gd" id="3_itbh4"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7rbrk"]
 sky_top_color = Color(0.38431373, 0.45490196, 0.54901963, 1)
@@ -36,16 +37,17 @@ shadow_enabled = true
 [node name="Arena" parent="." unique_id=1539584892 instance=ExtResource("1_14brs")]
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=135850333]
-transform = Transform3D(0.7071068, -0.35355338, 0.61237246, 0, 0.8660254, 0.50000006, -0.7071068, -0.35355338, 0.61237246, 18.371174, 17.504356, 18.371174)
+transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 17.504354, 25.980762)
 fov = 35.0
-size = 12.275
+size = 20.0
 script = ExtResource("2_7rbrk")
 target_path = NodePath("../CharacterBody3D")
-smoothness = 6.755
 perspective = true
+yaw_degrees = 0.0
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=1708755441]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.504355, 0)
+script = ExtResource("3_itbh4")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=403799777]
 shape = SubResource("CapsuleShape3D_14brs")
