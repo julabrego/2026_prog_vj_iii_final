@@ -5,7 +5,8 @@ enum FighterAction {
 	MOVE_DOWN,
 	MOVE_LEFT,
 	MOVE_RIGHT,
-	JUMP
+	JUMP,
+	JUMP_HELD
 }
 
 @export var speed := 14.0
@@ -14,15 +15,22 @@ enum FighterAction {
 @export var deceleration := 4.0
 @export var turn_speed := 10.0
 
-var fall_acceleration := float(ProjectSettings.get_setting("physics/3d/default_gravity"))
+@export var gravity: float = float(ProjectSettings.get_setting("physics/3d/default_gravity"))
+@export var fall_gravity_multiplier := 1.4
+@export var jump_cut_gravity_multiplier := 2.0
+@export var jump_buffer_time := 0.1
 
 var action_state: Dictionary[FighterAction, bool] = {
 	FighterAction.MOVE_UP: false,
 	FighterAction.MOVE_DOWN: false,
 	FighterAction.MOVE_LEFT: false,
 	FighterAction.MOVE_RIGHT: false,
-	FighterAction.JUMP: false
+	FighterAction.JUMP: false,
+	FighterAction.JUMP_HELD: false
 }
+
+# Timing state for the jump buffer, not intent
+var _jump_buffer_remaining := 0.0
 
 
 func _physics_process(delta: float) -> void:
@@ -37,6 +45,8 @@ func _gather_player_input() -> void:
 	action_state[FighterAction.MOVE_RIGHT] = Input.is_action_pressed("ui_right")
 	# JUMP stores edge semantics: true only on the frame it was pressed
 	action_state[FighterAction.JUMP] = Input.is_action_just_pressed("action_jump")
+	# JUMP_HELD stores level semantics: true every frame the button is down
+	action_state[FighterAction.JUMP_HELD] = Input.is_action_pressed("action_jump")
 
 
 func _move(delta: float) -> void:
@@ -72,12 +82,28 @@ func _move(delta: float) -> void:
 	horizontal_velocity = horizontal_velocity.lerp(target, 1.0 - exp(-accel * delta))
 
 	var vertical := velocity.y
-	if is_on_floor():
+	var on_floor := is_on_floor()
+	if on_floor:
 		vertical = 0.0
-		if action_state[FighterAction.JUMP]:
-			vertical = jump_velocity
+
+	# The jump buffer remembers a recent press until landing
+	if action_state[FighterAction.JUMP]:
+		_jump_buffer_remaining = jump_buffer_time
 	else:
-		vertical -= fall_acceleration * delta
+		_jump_buffer_remaining = maxf(_jump_buffer_remaining - delta, 0.0)
+
+	if on_floor and _jump_buffer_remaining > 0.0:
+		vertical = jump_velocity
+		_jump_buffer_remaining = 0.0
+
+	# Heavier gravity while rising without holding jump (jump cut)
+	if vertical > 0.0:
+		var rise_gravity := gravity
+		if not action_state[FighterAction.JUMP_HELD]:
+			rise_gravity *= jump_cut_gravity_multiplier
+		vertical -= rise_gravity * delta
+	elif not on_floor:
+		vertical -= gravity * fall_gravity_multiplier * delta
 
 	velocity = Vector3(horizontal_velocity.x, vertical, horizontal_velocity.z)
 
