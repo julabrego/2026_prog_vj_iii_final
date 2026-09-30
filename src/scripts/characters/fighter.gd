@@ -1,13 +1,6 @@
 extends CharacterBody3D
 
-enum FighterAction {
-	MOVE_UP,
-	MOVE_DOWN,
-	MOVE_LEFT,
-	MOVE_RIGHT,
-	JUMP,
-	JUMP_HELD
-}
+enum FighterAction { MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, JUMP, JUMP_HELD }
 
 @export var speed := 14.0
 @export var jump_velocity := 10.0
@@ -20,6 +13,8 @@ enum FighterAction {
 @export var jump_cut_gravity_multiplier := 2.0
 @export var jump_buffer_time := 0.1
 
+var current_animation := ""
+
 var action_state: Dictionary[FighterAction, bool] = {
 	FighterAction.MOVE_UP: false,
 	FighterAction.MOVE_DOWN: false,
@@ -31,6 +26,8 @@ var action_state: Dictionary[FighterAction, bool] = {
 
 # Timing state for the jump buffer, not intent
 var _jump_buffer_remaining := 0.0
+
+@onready var animation_player: AnimationPlayer = $Mannequin_Medium/AnimationPlayer
 
 
 func _physics_process(delta: float) -> void:
@@ -112,7 +109,29 @@ func _move(delta: float) -> void:
 	if horizontal_movement.length_squared() > 0.1:
 		var target_yaw := atan2(-horizontal_movement.x, -horizontal_movement.z)
 		# Smoothly turn towards it instead of snapping
-		global_rotation.y = lerp_angle(global_rotation.y, target_yaw,
-				1.0 - exp(-turn_speed * delta))
+		global_rotation.y = lerp_angle(
+			global_rotation.y, target_yaw, 1.0 - exp(-turn_speed * delta)
+		)
 
 	move_and_slide()
+
+	if not is_on_floor():
+		_play_animation("Jump_Idle")
+	elif horizontal_movement.length_squared() > 0.1:
+		var horizontal_speed := horizontal_movement.length()
+		var speed_ratio := clampf(horizontal_speed / speed, 0.0, 1.0)
+		var animation_speed := lerpf(0.5, 1.0, speed_ratio) * 1.5
+
+		_play_animation("Walking_A", animation_speed)
+	else:
+		_play_animation("Idle_A")
+
+
+func _play_animation(animation_name: String, animation_speed := 1.0) -> void:
+	animation_player.speed_scale = animation_speed
+
+	if current_animation == animation_name:
+		return
+
+	current_animation = animation_name
+	animation_player.play("Player/" + animation_name)
