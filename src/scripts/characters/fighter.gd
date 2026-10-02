@@ -31,10 +31,13 @@ var _jump_buffer_remaining := 0.0
 var _fighter_state := FighterState.MOVING
 
 @onready var animation_player: AnimationPlayer = $Mannequin_Medium/AnimationPlayer
+@onready
+var punch_hitbox: Area3D = $Mannequin_Medium/Rig_Medium/Skeleton3D/Hand_Right_Attachment/PunchArea
 
 
 func _ready() -> void:
 	animation_player.animation_finished.connect(_on_animation_finished)
+	punch_hitbox.body_entered.connect(_on_punch_body_entered)
 
 
 func _physics_process(delta: float) -> void:
@@ -146,6 +149,11 @@ func _update_state() -> void:
 func _enter_attack() -> void:
 	_fighter_state = FighterState.ATTACKING
 	_play_animation("Punch")
+
+
+func _on_punch_body_entered(body: Node3D) -> void:
+	if body.is_in_group("hittable"):
+		print("Punch hit: ", body.name)
 
 
 func _play_animation(animation_name: String, animation_speed := 1.0) -> void:

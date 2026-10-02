@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://b030uqhiisp2s"]
+
+[ext_resource type="Script" uid="uid://bnkn31kbexx1e" path="res://scripts/characters/fighter.gd" id="1_yewv4"]
+[ext_resource type="PackedScene" uid="uid://clyhqnvjggf5g" path="res://scenes/characters/shared/mannequin_medium.tscn" id="2_76oj4"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dyp2m"]
+height = 2.4
+
+[node name="Player" type="CharacterBody3D" unique_id=1943748090]
+script = ExtResource("1_yewv4")
+
+[node name="Mannequin_Medium" parent="." unique_id=384971036 instance=ExtResource("2_76oj4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.135, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=247547532]
+shape = SubResource("CapsuleShape3D_dyp2m")
+
+[node name="Player" type="Node3D" parent="." unique_id=1589114183]

@@ -2,8 +2,13 @@
 
 [ext_resource type="PackedScene" uid="uid://dnx6c5xblikte" path="res://scenes/stages/shared/base_arena.tscn" id="1_14brs"]
 [ext_resource type="Script" uid="uid://bo4qk8yndxq2f" path="res://scripts/core/arena_camera.gd" id="2_7rbrk"]
-[ext_resource type="Script" uid="uid://bnkn31kbexx1e" path="res://scripts/characters/fighter.gd" id="3_itbh4"]
-[ext_resource type="PackedScene" uid="uid://clyhqnvjggf5g" path="res://scenes/characters/mannequin_medium.tscn" id="4_l2up3"]
+[ext_resource type="PackedScene" uid="uid://b030uqhiisp2s" path="res://scenes/characters/player.tscn" id="3_itbh4"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_l2up3"]
+size = Vector3(2, 2, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ug867"]
+size = Vector3(2, 2, 2)
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7rbrk"]
 sky_top_color = Color(0.38431373, 0.45490196, 0.54901963, 1)
@@ -19,43 +24,39 @@ ambient_light_sky_contribution = 0.49
 tonemap_mode = 2
 glow_enabled = true
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_14brs"]
-height = 2.4
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_7rbrk"]
-height = 2.4
-
 [node name="PrototypeStage" type="Node3D" unique_id=1840787619]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1214565850]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=135850333]
+transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 19, 25.980762)
+fov = 35.0
+size = 20.0
+script = ExtResource("2_7rbrk")
+target_path = NodePath("../Player")
+perspective = true
+yaw_degrees = 0.0
+
+[node name="Player" parent="." unique_id=1943748090 instance=ExtResource("3_itbh4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+
+[node name="DummyBox" type="RigidBody3D" parent="." unique_id=213173621 groups=["hittable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0272942, -5)
+mass = 5.0
+freeze = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DummyBox" unique_id=210516312]
+shape = SubResource("BoxShape3D_l2up3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="DummyBox" unique_id=21314630]
+mesh = SubResource("BoxMesh_ug867")
+
+[node name="World" type="Node3D" parent="." unique_id=245572647]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="World" unique_id=1214565850]
 environment = SubResource("Environment_l2up3")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=379179682]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="World" unique_id=379179682]
 transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 33.914574, 0)
 light_color = Color(1, 1, 0.9490196, 1)
 shadow_enabled = true
 
-[node name="Arena" parent="." unique_id=1539584892 instance=ExtResource("1_14brs")]
-
-[node name="Camera3D" type="Camera3D" parent="." unique_id=135850333]
-transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 17.504354, 25.980762)
-fov = 35.0
-size = 20.0
-script = ExtResource("2_7rbrk")
-target_path = NodePath("../CharacterBody3D")
-perspective = true
-yaw_degrees = 0.0
-
-[node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=1708755441]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.504355, 0)
-script = ExtResource("3_itbh4")
-
-[node name="Mannequin_Medium" parent="CharacterBody3D" unique_id=384971036 instance=ExtResource("4_l2up3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.135, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=403799777]
-shape = SubResource("CapsuleShape3D_14brs")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D" unique_id=953653572]
-visible = false
-mesh = SubResource("CapsuleMesh_7rbrk")
+[node name="Arena" parent="World" unique_id=1539584892 instance=ExtResource("1_14brs")]
