@@ -1,6 +1,7 @@
 extends CharacterBody3D
 
-enum FighterAction { MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, JUMP, JUMP_HELD }
+enum FighterAction { MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, JUMP, JUMP_HELD, ATTACK }
+enum FighterState { MOVING, ATTACKING }
 
 @export var speed := 14.0
 @export var jump_velocity := 10.0
@@ -21,17 +22,24 @@ var action_state: Dictionary[FighterAction, bool] = {
 	FighterAction.MOVE_LEFT: false,
 	FighterAction.MOVE_RIGHT: false,
 	FighterAction.JUMP: false,
-	FighterAction.JUMP_HELD: false
+	FighterAction.JUMP_HELD: false,
+	FighterAction.ATTACK: false
 }
 
 # Timing state for the jump buffer, not intent
 var _jump_buffer_remaining := 0.0
+var _fighter_state := FighterState.MOVING
 
 @onready var animation_player: AnimationPlayer = $Mannequin_Medium/AnimationPlayer
 
 
+func _ready() -> void:
+	animation_player.animation_finished.connect(_on_animation_finished)
+
+
 func _physics_process(delta: float) -> void:
 	_gather_player_input()
+	_update_state()
 	_move(delta)
 
 
@@ -45,21 +53,23 @@ func _gather_player_input() -> void:
 	# JUMP_HELD stores level semantics: true every frame the button is down
 	action_state[FighterAction.JUMP_HELD] = Input.is_action_pressed("action_jump")
 
+	action_state[FighterAction.ATTACK] = Input.is_action_just_pressed("action_attack")
+
 
 func _move(delta: float) -> void:
 	var direction := Vector3.ZERO
 
-	if action_state[FighterAction.MOVE_UP]:
-		direction.z -= 1
-	if action_state[FighterAction.MOVE_DOWN]:
-		direction.z += 1
-	if action_state[FighterAction.MOVE_RIGHT]:
-		direction.x += 1
-	if action_state[FighterAction.MOVE_LEFT]:
-		direction.x -= 1
-
-	if direction != Vector3.ZERO:
-		direction = direction.normalized()
+	if _fighter_state == FighterState.MOVING:
+		if action_state[FighterAction.MOVE_UP]:
+			direction.z -= 1
+		if action_state[FighterAction.MOVE_DOWN]:
+			direction.z += 1
+		if action_state[FighterAction.MOVE_RIGHT]:
+			direction.x += 1
+		if action_state[FighterAction.MOVE_LEFT]:
+			direction.x -= 1
+		if direction != Vector3.ZERO:
+			direction = direction.normalized()
 
 	var horizontal_velocity := velocity
 	horizontal_velocity.y = 0
@@ -68,7 +78,6 @@ func _move(delta: float) -> void:
 
 	# The dot product (direction.dot(hvel)) checks if the object is already
 	# moving in the same direction as the input.
-
 	# Choose if accelerates or decelerates
 	var accel: float
 	if direction.dot(horizontal_velocity) > 0:
@@ -115,7 +124,9 @@ func _move(delta: float) -> void:
 
 	move_and_slide()
 
-	if not is_on_floor():
+	if _fighter_state == FighterState.ATTACKING:
+		_play_animation("Punch")
+	elif not is_on_floor():
 		_play_animation("Jump_Idle")
 	elif horizontal_movement.length_squared() > 0.1:
 		var horizontal_speed := horizontal_movement.length()
@@ -127,11 +138,26 @@ func _move(delta: float) -> void:
 		_play_animation("Idle_A")
 
 
+func _update_state() -> void:
+	if action_state[FighterAction.ATTACK] and _fighter_state == FighterState.MOVING:
+		_enter_attack()
+
+
+func _enter_attack() -> void:
+	_fighter_state = FighterState.ATTACKING
+	_play_animation("Punch")
+
+
 func _play_animation(animation_name: String, animation_speed := 1.0) -> void:
 	animation_player.speed_scale = animation_speed
 
-	if current_animation == animation_name:
+	if current_animation == animation_name and animation_player.is_playing():
 		return
 
 	current_animation = animation_name
 	animation_player.play("Player/" + animation_name)
+
+
+func _on_animation_finished(animation_name: StringName) -> void:
+	if animation_name == &"Player/Punch" and _fighter_state == FighterState.ATTACKING:
+		_fighter_state = FighterState.MOVING
