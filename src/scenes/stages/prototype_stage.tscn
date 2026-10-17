@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://dnx6c5xblikte" path="res://scenes/stages/shared/base_arena.tscn" id="1_14brs"]
 [ext_resource type="Script" uid="uid://bo4qk8yndxq2f" path="res://scripts/core/arena_camera.gd" id="2_7rbrk"]
 [ext_resource type="PackedScene" uid="uid://b030uqhiisp2s" path="res://scenes/characters/player.tscn" id="3_itbh4"]
+[ext_resource type="PackedScene" uid="uid://crxfyp2tv8y2w" path="res://scenes/characters/enemy.tscn" id="3_l2up3"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_l2up3"]
 size = Vector3(2, 2, 2)
@@ -37,6 +38,9 @@ yaw_degrees = 0.0
 
 [node name="Player" parent="." unique_id=1943748090 instance=ExtResource("3_itbh4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+
+[node name="Enemy" parent="." unique_id=1454667344 instance=ExtResource("3_l2up3")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -7.811092, 2.1265173, 0)
 
 [node name="DummyBox" type="RigidBody3D" parent="." unique_id=213173621 groups=["hittable"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0272942, -5)
