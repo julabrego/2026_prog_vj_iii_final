@@ -1,5 +1,6 @@
 [gd_scene format=4 uid="uid://crxfyp2tv8y2w"]
 
+[ext_resource type="Script" uid="uid://citj57kborcx2" path="res://scripts/characters/enemy.gd" id="1_f2e6v"]
 [ext_resource type="PackedScene" uid="uid://clyhqnvjggf5g" path="res://scenes/characters/shared/mannequin_medium.tscn" id="1_fulqv"]
 [ext_resource type="Texture2D" uid="uid://dofa4i1kd0jx0" path="res://assets/characters/Mannequin_Medium_mannequin_texture_enemy.png" id="2_f2e6v"]
 
@@ -132,27 +133,40 @@ blend_shape_mode = 0
 height = 2.4
 
 [node name="Enemy" type="CharacterBody3D" unique_id=1454667344]
+script = ExtResource("1_f2e6v")
 
 [node name="Mannequin_Medium" parent="." unique_id=384971036 instance=ExtResource("1_fulqv")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.135, 0)
 
-[node name="Mannequin_Medium_ArmLeft" parent="Mannequin_Medium/Rig_Medium/Skeleton3D" parent_id_path=PackedInt32Array(384971036, 170162682) index="0" unique_id=1439166315]
+[node name="Skeleton3D" parent="Mannequin_Medium/Rig_Medium" parent_id_path=PackedInt32Array(384971036, 1481414655) index="0" unique_id=170162682]
+bones/1/rotation = Quaternion(-1.1112262e-10, 0.04315775, 2.5724096e-09, 0.99906826)
+bones/2/rotation = Quaternion(0.99272436, -0.003953806, 0.04276561, 0.11248983)
+bones/5/rotation = Quaternion(-2.2034567e-06, 0.9202539, -0.391322, 5.628658e-07)
+bones/8/rotation = Quaternion(-0.6182439, 0.08072865, 0.6180116, 0.47887284)
+bones/13/rotation = Quaternion(-0.5599063, -0.060880326, -0.6439745, 0.5177794)
+bones/17/rotation = Quaternion(0.99732214, -0.029457362, 0.031529266, 0.059048314)
+bones/20/rotation = Quaternion(-8.934892e-05, 0.9202217, -0.3913977, 2.0290998e-05)
+
+[node name="Mannequin_Medium_ArmLeft" parent="Mannequin_Medium/Rig_Medium/Skeleton3D" index="0" unique_id=1439166315]
 mesh = SubResource("ArrayMesh_jgk6k")
 
-[node name="Mannequin_Medium_ArmRight" parent="Mannequin_Medium/Rig_Medium/Skeleton3D" parent_id_path=PackedInt32Array(384971036, 170162682) index="1" unique_id=1323706855]
+[node name="Mannequin_Medium_ArmRight" parent="Mannequin_Medium/Rig_Medium/Skeleton3D" index="1" unique_id=1323706855]
 mesh = SubResource("ArrayMesh_3k4es")
 
-[node name="Mannequin_Medium_Body" parent="Mannequin_Medium/Rig_Medium/Skeleton3D" parent_id_path=PackedInt32Array(384971036, 170162682) index="2" unique_id=324494990]
+[node name="Mannequin_Medium_Body" parent="Mannequin_Medium/Rig_Medium/Skeleton3D" index="2" unique_id=324494990]
 mesh = SubResource("ArrayMesh_x5khh")
 
-[node name="Mannequin_Medium_Head" parent="Mannequin_Medium/Rig_Medium/Skeleton3D" parent_id_path=PackedInt32Array(384971036, 170162682) index="3" unique_id=1216619363]
+[node name="Mannequin_Medium_Head" parent="Mannequin_Medium/Rig_Medium/Skeleton3D" index="3" unique_id=1216619363]
 mesh = SubResource("ArrayMesh_0ag5d")
 
-[node name="Mannequin_Medium_LegLeft" parent="Mannequin_Medium/Rig_Medium/Skeleton3D" parent_id_path=PackedInt32Array(384971036, 170162682) index="4" unique_id=841219316]
+[node name="Mannequin_Medium_LegLeft" parent="Mannequin_Medium/Rig_Medium/Skeleton3D" index="4" unique_id=841219316]
 mesh = SubResource("ArrayMesh_fulqv")
 
-[node name="Mannequin_Medium_LegRight" parent="Mannequin_Medium/Rig_Medium/Skeleton3D" parent_id_path=PackedInt32Array(384971036, 170162682) index="5" unique_id=2035129194]
+[node name="Mannequin_Medium_LegRight" parent="Mannequin_Medium/Rig_Medium/Skeleton3D" index="5" unique_id=2035129194]
 mesh = SubResource("ArrayMesh_f2e6v")
+
+[node name="Hand_Right_Attachment" parent="Mannequin_Medium/Rig_Medium/Skeleton3D" index="6" unique_id=353448462]
+transform = Transform3D(0.1498945, 6.2584877e-07, -0.988701, 1.4901161e-07, -0.9999989, 1.4901161e-07, -0.98870116, -2.9802322e-07, -0.14989431, -0.54791117, 0.73715484, 0.09797658)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1859447120]
 shape = SubResource("CapsuleShape3D_f0ik5")

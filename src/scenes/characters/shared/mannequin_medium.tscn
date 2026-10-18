@@ -10,7 +10,7 @@
 [ext_resource type="Animation" uid="uid://tvnxqs67xcsa" path="res://assets/animations/T-Pose.res" id="21_3eyb5"]
 [ext_resource type="Animation" uid="uid://dn566oeeo6k1i" path="res://assets/animations/Throw.res" id="22_efpcc"]
 [ext_resource type="Animation" uid="uid://dy1en3l7gonk5" path="res://assets/animations/Use_Item.res" id="23_6be3e"]
-[ext_resource type="Animation" uid="uid://cpifjx4l0dn6r" path="res://assets/animations/Walking_A.res" id="24_sjht8"]
+[ext_resource type="Animation" uid="uid://cdqr28q1o74l8" path="res://assets/animations/Walking_A.res" id="24_sjht8"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_c41jp"]
 radius = 0.3
@@ -446,10 +446,10 @@ _data = {
 
 [node name="Mannequin_Medium" unique_id=384971036 instance=ExtResource("1_0bn44")]
 
-[node name="Rig_Medium" parent="." index="0" unique_id=965333189]
+[node name="Rig_Medium" parent="." index="0" unique_id=1481414655]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
 
-[node name="Skeleton3D" parent="Rig_Medium" index="0" unique_id=405102912]
+[node name="Skeleton3D" parent="Rig_Medium" index="0" unique_id=170162682]
 bones/1/position = Vector3(0, 0.39206383, 0)
 bones/1/rotation = Quaternion(-1.11122625e-10, 0.043157753, 2.5724098e-09, 0.9990683)
 bones/1/scale = Vector3(0.99999994, 1, 0.99999994)
