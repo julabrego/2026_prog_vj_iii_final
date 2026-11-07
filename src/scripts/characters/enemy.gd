@@ -19,6 +19,9 @@ enum FighterState { MOVING, ATTACKING }
 @export var attack_distance := 2.0
 @export var attack_cooldown := 0.8
 
+@export var idle_pause_time := 5.0
+var _idle_remaining_time := 0.0
+
 var _attack_cooldown_remaining := 0.0
 
 var current_animation := ""
@@ -66,14 +69,18 @@ func _gather_ai_input(delta: float) -> void:
 	to_opponent.y = 0
 	
 	if to_opponent.length() > stop_distance:
-		action_state[FighterAction.MOVE_UP] = to_opponent.z < -0.1
-		action_state[FighterAction.MOVE_DOWN] = to_opponent.z > 0.1
-		action_state[FighterAction.MOVE_LEFT] = to_opponent.x < -0.1
-		action_state[FighterAction.MOVE_RIGHT] = to_opponent.x > 0.1
+		if _idle_remaining_time < idle_pause_time:
+			_idle_remaining_time += 0.1
+		else:
+			action_state[FighterAction.MOVE_UP] = to_opponent.z < -0.1
+			action_state[FighterAction.MOVE_DOWN] = to_opponent.z > 0.1
+			action_state[FighterAction.MOVE_LEFT] = to_opponent.x < -0.1
+			action_state[FighterAction.MOVE_RIGHT] = to_opponent.x > 0.1
 
 	if to_opponent.length() <= attack_distance and _attack_cooldown_remaining <= 0.0:
 		action_state[FighterAction.ATTACK] = true
 		_attack_cooldown_remaining = attack_cooldown
+		_idle_remaining_time = 0.0
 	
 func _move(delta: float) -> void:
 	var direction := Vector3.ZERO
@@ -151,6 +158,8 @@ func _move(delta: float) -> void:
 			global_rotation.y, target_yaw, 1.0 - exp(-turn_speed * delta)
 		)
 
+	var is_colliding_a_wall = is_on_wall()
+	print(is_colliding_a_wall)
 	move_and_slide()
 
 	if _fighter_state == FighterState.ATTACKING:
