@@ -132,6 +132,9 @@ blend_shape_mode = 0
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_f0ik5"]
 height = 2.4
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_f2e6v"]
+height = 2.4
+
 [node name="Enemy" type="CharacterBody3D" unique_id=1454667344]
 script = ExtResource("1_f2e6v")
 
@@ -168,8 +171,15 @@ mesh = SubResource("ArrayMesh_f2e6v")
 [node name="Hand_Right_Attachment" parent="Mannequin_Medium/Rig_Medium/Skeleton3D" index="6" unique_id=353448462]
 transform = Transform3D(0.1498945, 6.2584877e-07, -0.988701, 1.4901161e-07, -0.9999989, 1.4901161e-07, -0.98870116, -2.9802322e-07, -0.14989431, -0.54791117, 0.73715484, 0.09797658)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1859447120]
+[node name="Collision_Box" type="CollisionShape3D" parent="." unique_id=1859447120]
 shape = SubResource("CapsuleShape3D_f0ik5")
+
+[node name="JumpIntentionDetector" type="Area3D" parent="." unique_id=948687708]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="JumpIntentionDetector" unique_id=2000021446]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, -0.4234742, -0.67454785)
+shape = SubResource("CapsuleShape3D_f2e6v")
+debug_color = Color(0, 0.52815944, 0.9976123, 0.41960785)
 
 [node name="Player" type="Node3D" parent="." unique_id=74375317]
 

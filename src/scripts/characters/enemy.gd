@@ -19,8 +19,14 @@ enum FighterState { MOVING, ATTACKING }
 @export var attack_distance := 2.0
 @export var attack_cooldown := 0.8
 
-@export var idle_pause_time := 5.0
-var _idle_remaining_time := 0.0
+@export var run_cooldown := 5.0
+var _run_cooldown_remaining := 0.0
+
+var is_facing_jumpable := false
+@export var jump_anticipation_time := 0.5
+var _jump_anticipation_time_remaining := 0.0
+var _must_jump := false
+@onready var _jump_intention_detector = $JumpIntentionDetector
 
 var _attack_cooldown_remaining := 0.0
 
@@ -69,8 +75,8 @@ func _gather_ai_input(delta: float) -> void:
 	to_opponent.y = 0
 	
 	if to_opponent.length() > stop_distance:
-		if _idle_remaining_time < idle_pause_time:
-			_idle_remaining_time += 0.1
+		if _run_cooldown_remaining < run_cooldown:
+			_run_cooldown_remaining += 0.1
 		else:
 			action_state[FighterAction.MOVE_UP] = to_opponent.z < -0.1
 			action_state[FighterAction.MOVE_DOWN] = to_opponent.z > 0.1
@@ -80,8 +86,36 @@ func _gather_ai_input(delta: float) -> void:
 	if to_opponent.length() <= attack_distance and _attack_cooldown_remaining <= 0.0:
 		action_state[FighterAction.ATTACK] = true
 		_attack_cooldown_remaining = attack_cooldown
-		_idle_remaining_time = 0.0
-	
+		_run_cooldown_remaining = 0.0
+
+	var _sees_jumpable = (
+		_jump_intention_detector.get_overlapping_bodies().any(
+			func(b: Node3D) -> bool: return b.is_in_group("jumpable")
+			)
+		or _jump_intention_detector.get_overlapping_areas().any(
+			func(b: Node3D) -> bool: return b.is_in_group("jumpable")
+			)
+		)
+
+	if _sees_jumpable:
+			is_facing_jumpable = true
+
+			if _jump_anticipation_time_remaining < jump_anticipation_time:
+				_jump_anticipation_time_remaining += 0.1
+			else:
+				_must_jump = true
+				_jump_anticipation_time_remaining = 0.0
+
+	else:
+		_must_jump = false
+		action_state[FighterAction.JUMP] = false
+		print("stops jumping")
+
+	if _must_jump:
+		action_state[FighterAction.JUMP] = true
+		action_state[FighterAction.JUMP_HELD] = true
+		print("jumping")
+
 func _move(delta: float) -> void:
 	var direction := Vector3.ZERO
 	 
@@ -158,8 +192,6 @@ func _move(delta: float) -> void:
 			global_rotation.y, target_yaw, 1.0 - exp(-turn_speed * delta)
 		)
 
-	var is_colliding_a_wall = is_on_wall()
-	print(is_colliding_a_wall)
 	move_and_slide()
 
 	if _fighter_state == FighterState.ATTACKING:
