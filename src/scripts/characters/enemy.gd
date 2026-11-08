@@ -19,11 +19,14 @@ enum FighterState { MOVING, ATTACKING }
 @export var attack_distance := 2.0
 @export var attack_cooldown := 0.8
 
-@export var run_cooldown := 5.0
-var _run_cooldown_remaining := 0.0
+@export var run_delay := 0.83
+var _run_delay_remaining := run_delay
 
 var is_facing_jumpable := false
-@export var jump_anticipation_time := 0.5
+@export var jump_anticipation_time := 0.25
+@export var level_height_tolerance := 0.3
+@export var jump_hold_time := 0.35
+var _jump_hold_remaining := 0.0
 var _jump_anticipation_time_remaining := 0.0
 var _must_jump := false
 @onready var _jump_intention_detector = $JumpIntentionDetector
@@ -75,8 +78,8 @@ func _gather_ai_input(delta: float) -> void:
 	to_opponent.y = 0
 	
 	if to_opponent.length() > stop_distance:
-		if _run_cooldown_remaining < run_cooldown:
-			_run_cooldown_remaining += 0.1
+		if _run_delay_remaining > 0.0:
+			_run_delay_remaining = maxf(_run_delay_remaining - delta, 0.0) 
 		else:
 			action_state[FighterAction.MOVE_UP] = to_opponent.z < -0.1
 			action_state[FighterAction.MOVE_DOWN] = to_opponent.z > 0.1
@@ -86,35 +89,49 @@ func _gather_ai_input(delta: float) -> void:
 	if to_opponent.length() <= attack_distance and _attack_cooldown_remaining <= 0.0:
 		action_state[FighterAction.ATTACK] = true
 		_attack_cooldown_remaining = attack_cooldown
-		_run_cooldown_remaining = 0.0
+		_run_delay_remaining = 0.0
 
-	var _sees_jumpable = (
+	if is_on_floor():
+		var on_other_level := absf(opponent.global_position.y - global_position.y) > level_height_tolerance
+		var on_lower_level = (opponent.global_position.y - global_position.y) < 0
+
+		var _sees_pit = not on_lower_level and (_jump_intention_detector.get_overlapping_bodies().any(
+				func(b: Node3D) -> bool: return b.is_in_group("pit")
+			)
+		or _jump_intention_detector.get_overlapping_areas().any(
+			func(b: Node3D) -> bool: return b.is_in_group("pit")
+			)
+		)
+		
+		var _sees_jumpable = _sees_pit or (on_other_level and (
 		_jump_intention_detector.get_overlapping_bodies().any(
 			func(b: Node3D) -> bool: return b.is_in_group("jumpable")
 			)
 		or _jump_intention_detector.get_overlapping_areas().any(
 			func(b: Node3D) -> bool: return b.is_in_group("jumpable")
 			)
-		)
+		)) 
 
-	if _sees_jumpable:
-			is_facing_jumpable = true
-
-			if _jump_anticipation_time_remaining < jump_anticipation_time:
-				_jump_anticipation_time_remaining += 0.1
-			else:
-				_must_jump = true
+		if _sees_jumpable:
+			_jump_anticipation_time_remaining += delta
+			print("tengo que saltar oh")
+			if _sees_pit or _jump_anticipation_time_remaining >= jump_anticipation_time:
 				_jump_anticipation_time_remaining = 0.0
-
+				_must_jump = true
+				_jump_hold_remaining = jump_hold_time
+		else:
+			_jump_anticipation_time_remaining = 0.0
 	else:
-		_must_jump = false
-		action_state[FighterAction.JUMP] = false
-		print("stops jumping")
+		_jump_anticipation_time_remaining = 0.0
 
 	if _must_jump:
 		action_state[FighterAction.JUMP] = true
+		_must_jump = false
+
+	if _jump_hold_remaining > 0.0:
 		action_state[FighterAction.JUMP_HELD] = true
-		print("jumping")
+		_jump_hold_remaining -= delta
+
 
 func _move(delta: float) -> void:
 	var direction := Vector3.ZERO
