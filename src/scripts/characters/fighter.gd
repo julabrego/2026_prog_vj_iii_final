@@ -13,7 +13,6 @@ var _fighter_state := FighterState.MOVING
 @onready var animation_player: AnimationPlayer = $Mannequin_Medium/AnimationPlayer
 @onready
 var punch_hitbox: Area3D = $Mannequin_Medium/Rig_Medium/Skeleton3D/Hand_Right_Attachment/PunchArea
-
 @onready var movement: PlatformMovement = $PlatformMovement
 
 

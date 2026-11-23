@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://citj57kborcx2" path="res://scripts/characters/enemy.gd" id="1_f2e6v"]
 [ext_resource type="PackedScene" uid="uid://clyhqnvjggf5g" path="res://scenes/characters/shared/mannequin_medium.tscn" id="1_fulqv"]
 [ext_resource type="Texture2D" uid="uid://dofa4i1kd0jx0" path="res://assets/characters/Mannequin_Medium_mannequin_texture_enemy.png" id="2_f2e6v"]
+[ext_resource type="Script" uid="uid://cedh80fji2tx2" path="res://scripts/characters/platform_movement.gd" id="4_jgk6k"]
+[ext_resource type="Script" uid="uid://1uq3pwg73t2n" path="res://scripts/characters/fighter_animator.gd" id="5_3k4es"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_21x0f"]
 resource_name = "Character_Material"
@@ -182,5 +184,11 @@ shape = SubResource("CapsuleShape3D_f2e6v")
 debug_color = Color(0, 0.52815944, 0.9976123, 0.41960785)
 
 [node name="Player" type="Node3D" parent="." unique_id=74375317]
+
+[node name="PlatformMovement" type="Node" parent="." unique_id=822378776]
+script = ExtResource("4_jgk6k")
+
+[node name="FighterAnimator" type="Node" parent="." unique_id=818885302]
+script = ExtResource("5_3k4es")
 
 [editable path="Mannequin_Medium"]
