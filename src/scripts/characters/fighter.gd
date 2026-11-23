@@ -7,6 +7,8 @@ var current_animation := ""
 
 var _fighter_state := FighterState.MOVING
 
+
+@onready var animator: FighterAnimator = $FighterAnimator
 @onready var animation_player: AnimationPlayer = $Mannequin_Medium/AnimationPlayer
 @onready
 var punch_hitbox: Area3D = $Mannequin_Medium/Rig_Medium/Skeleton3D/Hand_Right_Attachment/PunchArea
@@ -16,7 +18,8 @@ var punch_hitbox: Area3D = $Mannequin_Medium/Rig_Medium/Skeleton3D/Hand_Right_At
 
 func _ready() -> void:
 	movement.body = self
-	animation_player.animation_finished.connect(_on_animation_finished)
+	animator.setup(self, animation_player)
+	animator.attack_finished.connect(_on_attack_finished)
 	punch_hitbox.body_entered.connect(_on_punch_body_entered)
 
 
@@ -145,6 +148,5 @@ func _play_animation(animation_name: String, animation_speed := 1.0) -> void:
 	animation_player.play("Player/" + animation_name)
 
 
-func _on_animation_finished(animation_name: StringName) -> void:
-	if animation_name == &"Player/Punch" and _fighter_state == FighterState.ATTACKING:
-		_fighter_state = FighterState.MOVING
+func _on_attack_finished() -> void:
+	_fighter_state = FighterState.MOVING
