@@ -1,5 +1,5 @@
-extends Node
 class_name PlatformMovement
+extends Node
 
 
 enum PlatformMovementActions { MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, JUMP, JUMP_HELD }

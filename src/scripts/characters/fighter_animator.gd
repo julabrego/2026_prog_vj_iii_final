@@ -1,5 +1,5 @@
-extends Node
 class_name FighterAnimator
+extends Node
 
 signal attack_finished
 
