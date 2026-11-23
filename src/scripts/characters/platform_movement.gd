@@ -15,7 +15,7 @@ enum PlatformMovementActions { MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, JUMP, 
 @export var jump_buffer_time := 0.1
 
 var body: CharacterBody3D
-var _is_moving := false
+var is_moving := false
 
 var _jump_buffer_remaining := 0.0
 var _action_state: Dictionary[PlatformMovementActions, bool] = {
@@ -43,9 +43,8 @@ func _physics_process(delta: float) -> void:
 
 func _move(delta: float) -> void:
 	var direction := Vector3.ZERO
-	_is_moving = true in _action_state.values()
 
-	if _is_moving:
+	if is_moving:
 		if _action_state[PlatformMovementActions.MOVE_UP]:
 			direction.z -= 1
 		if _action_state[PlatformMovementActions.MOVE_DOWN]:
