@@ -2,7 +2,7 @@ class_name PlayerFighter
 extends Fighter
 
 
-func _gather_input() -> void:
+func _gather_input(_delta: float) -> void:
 	var move := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	movement.set_intent(
 		move,
@@ -12,4 +12,3 @@ func _gather_input() -> void:
 
 	if Input.is_action_just_pressed("action_attack"):
 		request_attack()
-

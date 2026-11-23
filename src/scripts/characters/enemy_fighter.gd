@@ -1,7 +1,6 @@
-extends CharacterBody3D
+class_name EnemyFighter
+extends Fighter
 
-enum FighterAction { ATTACK }
-enum FighterState { MOVING, ATTACKING }
 
 @export var opponent : Node3D
 @export var stop_distance := 2.5
@@ -26,36 +25,8 @@ var _attack_cooldown_remaining := 0.0
 
 var current_animation := ""
 
-var _fighter_state := FighterState.MOVING
 
-@onready var animator: FighterAnimator = $FighterAnimator
-@onready var animation_player: AnimationPlayer = $Mannequin_Medium/AnimationPlayer
-@onready
-var punch_hitbox: Area3D = $Mannequin_Medium/Rig_Medium/Skeleton3D/Hand_Right_Attachment/PunchArea
-@onready var movement: PlatformMovement = $PlatformMovement
-
-
-func request_attack() -> bool:
-	if _fighter_state != FighterState.MOVING:
-		return false
-	_fighter_state = FighterState.ATTACKING
-	return true
-
-func _ready() -> void:
-	movement.body = self
-	animator.setup(self, animation_player)
-	animator.attack_finished.connect(_on_attack_finished)
-	punch_hitbox.body_entered.connect(_on_punch_body_entered)
-
-
-func _physics_process(delta: float) -> void:
-	_gather_ai_input(delta)
-	movement.is_moving = _fighter_state == FighterState.MOVING
-	animator.is_attacking = _fighter_state == FighterState.ATTACKING
-
-
-
-func _gather_ai_input(delta: float) -> void:
+func _gather_input(delta: float) -> void:
 	_attack_cooldown_remaining = maxf(_attack_cooldown_remaining - delta, 0.0)
 
 	if not is_instance_valid(opponent):
@@ -122,11 +93,3 @@ func _gather_ai_input(delta: float) -> void:
 
 	movement.set_intent(move, jump_pressed, jump_held)
 
-
-func _on_punch_body_entered(body: Node3D) -> void:
-	if body.is_in_group("hittable"):
-		print("Punch hit: ", body.name)
-
-
-func _on_attack_finished() -> void:
-	_fighter_state = FighterState.MOVING

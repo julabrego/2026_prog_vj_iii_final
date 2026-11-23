@@ -21,12 +21,12 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	_gather_input()
+	_gather_input(delta)
 	movement.is_moving = _fighter_state == FighterState.MOVING
 	animator.is_attacking = _fighter_state == FighterState.ATTACKING
 
 
-func _gather_input() -> void:
+func _gather_input(_delta: float) -> void:
 	pass
 
 

@@ -1,7 +1,7 @@
 [gd_scene format=4 uid="uid://crxfyp2tv8y2w"]
 
-[ext_resource type="Script" uid="uid://citj57kborcx2" path="res://scripts/characters/enemy.gd" id="1_f2e6v"]
 [ext_resource type="PackedScene" uid="uid://clyhqnvjggf5g" path="res://scenes/characters/shared/mannequin_medium.tscn" id="1_fulqv"]
+[ext_resource type="Script" path="res://scripts/characters/enemy_fighter.gd" id="1_jgk6k"]
 [ext_resource type="Texture2D" uid="uid://dofa4i1kd0jx0" path="res://assets/characters/Mannequin_Medium_mannequin_texture_enemy.png" id="2_f2e6v"]
 [ext_resource type="Script" uid="uid://cedh80fji2tx2" path="res://scripts/characters/platform_movement.gd" id="4_jgk6k"]
 [ext_resource type="Script" uid="uid://1uq3pwg73t2n" path="res://scripts/characters/fighter_animator.gd" id="5_3k4es"]
@@ -138,7 +138,7 @@ height = 2.4
 height = 2.4
 
 [node name="Enemy" type="CharacterBody3D" unique_id=1454667344]
-script = ExtResource("1_f2e6v")
+script = ExtResource("1_jgk6k")
 
 [node name="Mannequin_Medium" parent="." unique_id=384971036 instance=ExtResource("1_fulqv")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.135, 0)
