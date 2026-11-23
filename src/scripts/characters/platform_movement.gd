@@ -1,6 +1,7 @@
 extends Node
 class_name PlatformMovement
 
+
 enum PlatformMovementActions { MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, JUMP, JUMP_HELD }
 
 @export var speed := 14.0
