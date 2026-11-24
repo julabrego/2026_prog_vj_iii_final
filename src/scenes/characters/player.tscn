@@ -4,12 +4,14 @@
 [ext_resource type="PackedScene" uid="uid://clyhqnvjggf5g" path="res://scenes/characters/shared/mannequin_medium.tscn" id="2_76oj4"]
 [ext_resource type="Script" uid="uid://cedh80fji2tx2" path="res://scripts/components/platform_movement.gd" id="3_dyp2m"]
 [ext_resource type="Script" uid="uid://1uq3pwg73t2n" path="res://scripts/characters/fighter_animator.gd" id="4_atpat"]
+[ext_resource type="Resource" uid="uid://goriq8afc303" path="res://resources/characters/player_movement.tres" id="4_kqtwu"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dyp2m"]
 height = 2.4
 
 [node name="Player" type="CharacterBody3D" unique_id=1943748090]
 script = ExtResource("1_dyp2m")
+movement_settings = ExtResource("4_kqtwu")
 
 [node name="Mannequin_Medium" parent="." unique_id=384971036 instance=ExtResource("2_76oj4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.135, 0)

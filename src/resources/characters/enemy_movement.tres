@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="PlatformMovementSettings" format=3 uid="uid://brfq7o4bb6cbg"]
+
+[ext_resource type="Script" uid="uid://dihp4bwvrf6hr" path="res://scripts/components/platform_movement_settings.gd" id="1_rgm01"]
+
+[resource]
+script = ExtResource("1_rgm01")
+gravity = null

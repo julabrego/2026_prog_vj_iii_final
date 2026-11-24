@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="PlatformMovementSettings" format=3 uid="uid://goriq8afc303"]
+
+[ext_resource type="Script" uid="uid://dihp4bwvrf6hr" path="res://scripts/components/platform_movement_settings.gd" id="1_m3x6s"]
+
+[resource]
+script = ExtResource("1_m3x6s")

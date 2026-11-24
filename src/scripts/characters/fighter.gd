@@ -6,6 +6,8 @@ enum FighterState { MOVING, ATTACKING }
 
 var _fighter_state := FighterState.MOVING
 
+@export var movement_settings: PlatformMovementSettings
+
 @onready var movement: PlatformMovement = $PlatformMovement
 @onready var animator: FighterAnimator = $FighterAnimator
 @onready var animation_player: AnimationPlayer = $Mannequin_Medium/AnimationPlayer
@@ -15,10 +17,10 @@ var punch_hitbox: Area3D = $Mannequin_Medium/Rig_Medium/Skeleton3D/Hand_Right_At
 
 func _ready() -> void:
 	movement.body = self
+	movement.settings = movement_settings
 	animator.setup(self, animation_player)
 	animator.attack_finished.connect(_on_attack_finished)
 	punch_hitbox.body_entered.connect(_on_punch_body_entered)
-
 
 func _physics_process(delta: float) -> void:
 	_gather_input(delta)

@@ -4,16 +4,7 @@ extends Node
 
 enum PlatformMovementActions { MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, JUMP, JUMP_HELD }
 
-@export var speed := 14.0
-@export var jump_velocity := 10.0
-@export var acceleration := 5.0
-@export var deceleration := 4.0
-@export var turn_speed := 10.0
-
-@export var gravity: float = float(ProjectSettings.get_setting("physics/3d/default_gravity"))
-@export var fall_gravity_multiplier := 1.4
-@export var jump_cut_gravity_multiplier := 2.0
-@export var jump_buffer_time := 0.1
+var settings: PlatformMovementSettings
 
 var body: CharacterBody3D
 var is_moving := false
@@ -60,16 +51,16 @@ func _move(delta: float) -> void:
 	var horizontal_velocity := body.velocity
 	horizontal_velocity.y = 0
 
-	var target := direction * speed
+	var target := direction * settings.speed
 
 	# The dot product (direction.dot(hvel)) checks if the object is already
 	# moving in the same direction as the input.
 	# Choose if accelerates or decelerates
 	var accel: float
 	if direction.dot(horizontal_velocity) > 0:
-		accel = acceleration
+		accel = settings.acceleration
 	else:
-		accel = deceleration
+		accel = settings.deceleration
 
 	horizontal_velocity = horizontal_velocity.lerp(target, 1.0 - exp(-accel * delta))
 
@@ -80,22 +71,22 @@ func _move(delta: float) -> void:
 
 	# The jump buffer remembers a recent press until landing
 	if _action_state[PlatformMovementActions.JUMP]:
-		_jump_buffer_remaining = jump_buffer_time
+		_jump_buffer_remaining = settings.jump_buffer_time
 	else:
 		_jump_buffer_remaining = maxf(_jump_buffer_remaining - delta, 0.0)
 
 	if on_floor and _jump_buffer_remaining > 0.0:
-		vertical = jump_velocity
+		vertical = settings.jump_velocity
 		_jump_buffer_remaining = 0.0
 
 	# Heavier gravity while rising without holding jump (jump cut)
 	if vertical > 0.0:
-		var rise_gravity := gravity
+		var rise_gravity := settings.gravity
 		if not _action_state[PlatformMovementActions.JUMP_HELD]:
-			rise_gravity *= jump_cut_gravity_multiplier
+			rise_gravity *= settings.jump_cut_gravity_multiplier
 		vertical -= rise_gravity * delta
 	elif not on_floor:
-		vertical -= gravity * fall_gravity_multiplier * delta
+		vertical -= settings.gravity * settings.fall_gravity_multiplier * delta
 
 	body.velocity = Vector3(horizontal_velocity.x, vertical, horizontal_velocity.z)
 
@@ -103,8 +94,7 @@ func _move(delta: float) -> void:
 	if horizontal_movement.length_squared() > 0.1:
 		var target_yaw := atan2(-horizontal_movement.x, -horizontal_movement.z)
 		body.global_rotation.y = lerp_angle(
-		body.global_rotation.y, target_yaw, 1.0 - exp(-turn_speed * delta)
+		body.global_rotation.y, target_yaw, 1.0 - exp(-settings.turn_speed * delta)
 	)
 
 	body.move_and_slide()
-
