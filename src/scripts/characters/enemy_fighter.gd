@@ -26,6 +26,11 @@ var _attack_cooldown_remaining := 0.0
 var current_animation := ""
 
 
+func _ready() -> void:
+	super()
+	_run_delay_remaining = run_delay
+
+
 func _gather_input(delta: float) -> void:
 	_tick_cooldowns(delta);
 
@@ -67,7 +72,7 @@ func _try_attack(distance: Vector3) -> void:
 
 	if request_attack():
 		_attack_cooldown_remaining = attack_cooldown
-		_run_delay_remaining = 0.0
+		_run_delay_remaining = run_delay
 
 
 func _update_jump_anticipation(delta: float) -> void:

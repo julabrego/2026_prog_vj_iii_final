@@ -5,6 +5,7 @@ extends Node
 enum PlatformMovementActions { MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, JUMP, JUMP_HELD }
 
 var settings: PlatformMovementSettings
+var gravity: float = float(ProjectSettings.get_setting("physics/3d/default_gravity"))
 
 var body: CharacterBody3D
 var is_moving := false
@@ -81,12 +82,12 @@ func _move(delta: float) -> void:
 
 	# Heavier gravity while rising without holding jump (jump cut)
 	if vertical > 0.0:
-		var rise_gravity := settings.gravity
+		var rise_gravity := gravity
 		if not _action_state[PlatformMovementActions.JUMP_HELD]:
 			rise_gravity *= settings.jump_cut_gravity_multiplier
 		vertical -= rise_gravity * delta
 	elif not on_floor:
-		vertical -= settings.gravity * settings.fall_gravity_multiplier * delta
+		vertical -= gravity * settings.fall_gravity_multiplier * delta
 
 	body.velocity = Vector3(horizontal_velocity.x, vertical, horizontal_velocity.z)
 
