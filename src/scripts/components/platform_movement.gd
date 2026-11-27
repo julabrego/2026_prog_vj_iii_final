@@ -19,7 +19,7 @@ var _action_state: Dictionary[PlatformMovementActions, bool] = {
 	PlatformMovementActions.JUMP: false,
 	PlatformMovementActions.JUMP_HELD: false,
 }
-
+var face_override := false
 
 func set_intent(move: Vector2, jump_pressed: bool, jump_held: bool) -> void:
 	_action_state[PlatformMovementActions.MOVE_LEFT] = move.x < 0.0
@@ -28,6 +28,16 @@ func set_intent(move: Vector2, jump_pressed: bool, jump_held: bool) -> void:
 	_action_state[PlatformMovementActions.MOVE_DOWN] = move.y > 0.0
 	_action_state[PlatformMovementActions.JUMP] = jump_pressed
 	_action_state[PlatformMovementActions.JUMP_HELD] = jump_held
+
+
+func face_direction(direction: Vector3, delta: float) -> void:
+	var flat := Vector3(direction.x, 0.0, direction.z)
+	if flat.length_squared() < 0.0001:
+		return
+	var target_yaw := atan2(-flat.x, -flat.z)
+	body.global_rotation.y = lerp_angle(
+		body.global_rotation.y, target_yaw, 1.0 - exp(-settings.turn_speed * delta)
+	)
 
 
 func _physics_process(delta: float) -> void:
@@ -92,7 +102,7 @@ func _move(delta: float) -> void:
 	body.velocity = Vector3(horizontal_velocity.x, vertical, horizontal_velocity.z)
 
 	var horizontal_movement := Vector3(body.velocity.x, 0, body.velocity.z)
-	if horizontal_movement.length_squared() > 0.1:
+	if not face_override and horizontal_movement.length_squared() > 0.1:
 		var target_yaw := atan2(-horizontal_movement.x, -horizontal_movement.z)
 		body.global_rotation.y = lerp_angle(
 		body.global_rotation.y, target_yaw, 1.0 - exp(-settings.turn_speed * delta)

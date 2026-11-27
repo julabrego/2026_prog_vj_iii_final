@@ -29,7 +29,7 @@ var current_animation := ""
 func _ready() -> void:
 	super()
 	_run_delay_remaining = run_delay
-
+	movement.face_override = true
 
 func _gather_input(delta: float) -> void:
 	_tick_cooldowns(delta);
@@ -44,6 +44,8 @@ func _gather_input(delta: float) -> void:
 	_try_attack(distance_to_opponent)
 	_update_jump_anticipation(delta)
 
+	if not _fighter_state == FighterState.ATTACKING:
+		movement.face_direction(distance_to_opponent, delta)
 	movement.set_intent(move, _consume_jump_press(), _is_jump_held(delta))
 
 func _tick_cooldowns(delta: float) -> void:
@@ -81,17 +83,17 @@ func _update_jump_anticipation(delta: float) -> void:
 		return
 
 	var height_difference := opponent.global_position.y - global_position.y
-	var on_other_level := absf(height_difference) > level_height_tolerance
 	var on_lower_level = height_difference < 0.0
 	var _sees_pit = not on_lower_level and _detector_sees_group("pit")
-	var _sees_jumpable = _sees_pit or (on_other_level and _detector_sees_group("jumpable"))
+	var _sees_jumpable = _sees_pit or _detector_sees_group("jumpable")
+	var distance_to_opponent := _distance_to_opponent()
 
 	if not _sees_jumpable:
 		_jump_anticipation_time_remaining = 0.0
 		return
 
 	_jump_anticipation_time_remaining += delta
-	if _sees_pit or _jump_anticipation_time_remaining >= jump_anticipation_time:
+	if (_sees_pit or _jump_anticipation_time_remaining >= jump_anticipation_time) and distance_to_opponent.length() > attack_distance:
 		_jump_anticipation_time_remaining = 0.0
 		_jump_requested = true
 		_jump_hold_remaining = jump_hold_time

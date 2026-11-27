@@ -102,6 +102,19 @@ shape = SubResource("BoxShape3D_bdqoo")
 mesh = SubResource("BoxMesh_hcjds")
 surface_material_override/0 = ExtResource("4_ug867")
 
+[node name="Platform4" type="RigidBody3D" parent="." unique_id=1661335255 groups=["jumpable", "obstacle"]]
+transform = Transform3D(0.14940447, 0, 0, 0, 1, 0, -4.440892e-16, 0, 0.9596713, 0.03354931, 1.4610405, -0.17531204)
+mass = 5.0
+freeze = true
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Platform4" unique_id=891607082]
+shape = SubResource("BoxShape3D_bdqoo")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Platform4" unique_id=631967105]
+mesh = SubResource("BoxMesh_hcjds")
+surface_material_override/0 = ExtResource("4_ug867")
+
 [node name="Platform3" type="RigidBody3D" parent="." unique_id=1788616302 groups=["jumpable", "obstacle"]]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 9.844371, 0.8916087, 10.991865)
 mass = 5.0
